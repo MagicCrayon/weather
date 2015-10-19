@@ -83,18 +83,26 @@ int main(int argc, char* argv[])
     
     showWeather(city);
     
-   /* strcpy(cityArray, city);
+/*  * Replace XXXX in the url *
+    const char *url = "http://weather.noaa.gov/pub/data/observations/metar/decoded/XXXX.TXT";
+    char urlArray[strlen(url)];
+    char *city = "CYYZ";                       
+    char cityArray[4];                          
 
+    
+    strcpy(urlArray, url); 
+    strcpy(cityArray, city);
+    
+                 
+    urlArray[60] = cityArray[0];
+    urlArray[61] = cityArray[1];
+    urlArray[62] = cityArray[2];
+    urlArray[63] = cityArray[3];
+     
     printf("\ncityArray: %s\n", cityArray);
-    
-    url[60] = cityArray[0];
-    url[61] = cityArray[1];
-    url[62] = cityArray[2];
-    url[63] = cityArray[3];
-
-    printf("\n%s\n", url);    
+    printf("\nURL:%s\n", urlArray);     
 */
-    
+
     return 0;
 }
 
