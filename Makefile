@@ -1,4 +1,4 @@
 all:
-	gcc main.c -o main -ggdb
+	gcc -Wall main.c -o main -ggdb
 clean:
 	rm main

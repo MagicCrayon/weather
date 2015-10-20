@@ -57,7 +57,13 @@ int main(int argc, char* argv[])
                 hflag = 1;
                 break;
             case 's':
-                city = optarg;
+                if ( strlen(optarg) == 4)
+                    city = optarg;
+                else
+                {
+                    printf("Code Invalid\n");
+                    exit(-1);
+                }
                 break;
             case '?':
                 if (optopt == 's')
