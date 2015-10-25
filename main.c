@@ -14,9 +14,9 @@
  * Temperature: -2 C
  * Dew Point: -4 C
  * Sky conditions: mostly clear
- *
+ *2
  * TODO
- * - Make sure input city is only 4 chars
+ * - Make sure ICAO is only 4 chars
  * - Write the rest of the program
  *
  * - Get Input From Parameters on which city need to show, set one by defualt
@@ -30,18 +30,29 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <string.h>
+#include <curl/curl.h>
 
 /* Function Prototypes */
 void usage();
 int showWeather(char *);
+//void curlWrite(void, size_t, size_t, void);
+
+/* 
+ * Information parsed from the weather site
+ * */
+typedef struct info 
+{
+    char *ICAO;
+    char *date;
+    char *temp;
+    char *dewPoint;
+    char *skyCond;
+} info;
 
 int main(int argc, char* argv[])
 {
-    char url[] = "http://weather.noaa.gov/pub/data/observations/metar/decoded/XXXX.TXT";
     char *city = "CYYZ";                       /* Show This Citys Weather  */
-    char cityArray[3] = {0};                          /* Used When Appending To url[] */
-    int sflag, hflag = 0;                       /* Set Flags                */
-    char *svalue = NULL;                      /* Hold Prefered City       */
+    int hflag = 0;                            /* Set Flags                */
     int c;
 
     opterr = 0;
@@ -86,13 +97,36 @@ int main(int argc, char* argv[])
         exit(1);
     }
 
-    
     showWeather(city);
-    
-/*  * Replace XXXX in the url *
+
+    return 0;
+}
+
+void usage()
+{
+    printf("Usage: ./main <argument> <paraneter>\n");
+    printf("-h  -   Show Help\n");
+    printf("-s  -   Set City \n");
+}
+
+void curlWrite(void *contents, size_t size, size_t nmemb, void *userp)
+{
+    printf("FEFEEFE=============================================\n");
+    printf("%s", contents);
+}
+
+int showWeather(char *cityname)
+{
+
+    CURL *curl_handel;
+    CURLcode res;
+
+    /*
+     * Replace XXXX with ICAO code
+     */
     const char *url = "http://weather.noaa.gov/pub/data/observations/metar/decoded/XXXX.TXT";
     char urlArray[strlen(url)];
-    char *city = "CYYZ";                       
+    char *city = cityname;                       
     char cityArray[4];                          
 
     
@@ -105,29 +139,22 @@ int main(int argc, char* argv[])
     urlArray[62] = cityArray[2];
     urlArray[63] = cityArray[3];
      
-    printf("\ncityArray: %s\n", cityArray);
-    printf("\nURL:%s\n", urlArray);     
-*/
+    //printf("\ncityArray: %s\n", cityArray);
+    //printf("\nURL:%s\n", urlArray);
 
-    return 0;
-}
+    /*
+     * Using cURL get information
+     */
+    curl_handel = curl_easy_init();
 
-void usage()
-{
-    printf("Usage: ./main <argument> <paraneter>\n");
-    printf("-h  -   Show Help\n");
-    printf("-s  -   Set City \n");
-}
+    if(curl_handel)
+    {
+        curl_easy_setopt(curl_handel, CURLOPT_URL, urlArray);
+        curl_easy_setopt(curl_handel, CURLOPT_WRITEFUNCTION, curlWrite);
+        res = curl_easy_perform(curl_handel); /* Output It */
+        curl_easy_cleanup(curl_handel);
+    }
 
-/*
- * Good Enough For Now ;)
- */
-int showWeather(char *cityname)
-{
-    printf("%s\n", cityname);
-    printf("Oct 18, 2015 - 08:00 PM\n");
-    printf("Temperature: -2 C\n");
-    printf("Dew point: -4 C\n");
-    printf("Sky conditions: mostly clear\n");
+
     return 1;
 }
