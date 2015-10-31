@@ -51,7 +51,7 @@ int getLine(FILE* );
 typedef struct weatherPoints
 {
     char *ICAO;
-    char *date;
+    char *time;
     char *temp;
     char *dewPoint;
     char *skyCond;
@@ -120,13 +120,6 @@ void usage() // TODO Fix the msgs in the help
     printf("-h  -   Show Help\n");
     printf("-s  -   Set City \n");
 }
-
-/*
-int sendDataToBuffer()
-{
-    NULL;
-}
-*/
 
 /*
  * The following function came from a cURL example.
@@ -239,7 +232,7 @@ int showWeather(char *cityname)
         fclose(weatherTemp);
         
         /* 
-         * Get whole data, send to buffer then info struct
+         * Get whole data, send to temp file and then struct
          */
         
         weatherTemp = fopen("/tmp/weathertemp.tmp", "rb");
@@ -263,23 +256,36 @@ int showWeather(char *cityname)
         while (count <= length)
         {
             /* Compare array with ascii */ 
-            if (weatherInfo[0][count] == 40)
+            if (weatherInfo[0][count] == 40) 
             {
                 char ICAO[5] = {0};
-                ICAO[0] = weatherInfo[0][count+1];
+                ICAO[0] = weatherInfo[0][count+1]; // Maybe change to something like strcpy(str2, str1+4);
                 ICAO[1] = weatherInfo[0][count+2];
                 ICAO[2] = weatherInfo[0][count+3];
                 ICAO[3] = weatherInfo[0][count+4];
                 ICAO[4] = '\0';
                 data.ICAO = ICAO;
-                printf("%s\n", data.ICAO);
             }
             count++;
         }
 
-        
+        /*
+         * Get Time from second line
+         */
+                
+        char time[28] = {0};
+        for (int i = 0; i <= 28; i++)
+        {
+            time[i] = weatherInfo[1][i];
+        }
+        time[28] = '\0';
+        data.time = time;
 
-    }
+
+
+
+
+    } // end else
 
     curl_easy_cleanup(curl_handle);
 
