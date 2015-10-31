@@ -52,7 +52,7 @@ typedef struct weatherPoints
 {
     char *ICAO;
     char *time;
-    char *temp;
+    char *temperature;
     char *dewPoint;
     char *skyCond;
 } weatherPoints;
@@ -269,6 +269,7 @@ int showWeather(char *cityname)
             count++;
         }
 
+        printf("%s\n", data.ICAO);
         /*
          * Get Time from second line
          */
@@ -279,8 +280,30 @@ int showWeather(char *cityname)
             time[i] = weatherInfo[1][i];
         }
         time[28] = '\0';
-        data.time = time;
+        data.time = time; 
 
+        /*
+         * Get temp from sixth line
+         */
+        
+        length = strlen(weatherInfo[5]);
+        
+        count = 0;
+        while (count <= length)
+        {
+            if(weatherInfo[5][count] == 40)
+            {
+                char temperature[2] = {0};
+                temperature[0] = weatherInfo[5][count+1];
+                temperature[1] = weatherInfo[5][count+3];
+                temperature[2] = '\0';
+                data.temperature = temperature;
+            }
+            count++;
+        }
+
+
+        printf("%s\n", data.ICAO);
 
 
 
