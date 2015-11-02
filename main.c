@@ -18,6 +18,11 @@
  * - Fix dangrous code
  *
  * - Add header file
+ *
+ * - Sometimes the station name is 'Station name not available'
+ *   add exception to that
+ *
+ * - Make ICAO change to capitals all the time
  */
 
 #include <stdio.h>
